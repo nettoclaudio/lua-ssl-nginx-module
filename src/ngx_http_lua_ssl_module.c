@@ -269,6 +269,10 @@ ngx_http_lua_ffi_update_ticket_encryption_key(SSL_CTX *ctx,
     }
 
     /* copy the new key */
+#if (nginx_version > 1011008)
+    pkey->size = key_length;
+#endif
+
     if (key_length == 48) {
         ngx_memcpy(pkey->name, key, 16);
         ngx_memcpy(pkey->aes_key, key + 16, 16);
@@ -324,6 +328,10 @@ ngx_http_lua_ffi_update_last_ticket_decryption_key(SSL_CTX *ctx,
     pkey = &pkey[keys->nelts - 1];
 
     dd("replace the last key");
+#if (nginx_version > 1011008)
+    pkey->size = key_length;
+#endif
+
     if (key_length == 48) {
         ngx_memcpy(pkey->name, key, 16);
         ngx_memcpy(pkey->aes_key, key + 16, 16);
